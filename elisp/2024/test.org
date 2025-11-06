@@ -1,0 +1,7 @@
+#+begin_src elisp
+(insert-file-contents "hello.txt")  hello
+
+#+end_src
+
+#+RESULTS:
+| /home/yuanw/workspace/adventofcode/elisp/2024/hello.txt | 6 |

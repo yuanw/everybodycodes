@@ -1,0 +1,193 @@
+cabal-version: 2.4
+name:          aoc
+version:       0.0.0.1
+license:       MIT
+copyright:     2022 Yuan Wang
+maintainer:    me@yuanwang.ca
+author:        Yuan Wang
+build-type:    Simple
+data-files:
+  data/2021/*.txt
+  data/2022/*.txt
+  data/2023/*.txt
+  data/2024/*.txt
+
+-- extra-source-files:
+--   LICENSE
+--   README.md
+
+common shared
+  ghc-options:
+    -Wall -Wincomplete-record-updates -Wincomplete-uni-patterns
+    -Wmissing-deriving-strategies -Wunused-foralls -Wunused-foralls
+    -fprint-explicit-foralls -fprint-explicit-kinds
+    -Wno-unticked-promoted-constructors
+
+  -- mixins:
+  --   base hiding (Prelude),
+  --   relude (Relude as Prelude, Relude.Container.One),
+  --   relude
+
+  default-extensions:
+    BangPatterns
+    ConstraintKinds
+    DataKinds
+    DeriveDataTypeable
+    DeriveFoldable
+    DeriveFunctor
+    DeriveGeneric
+    DeriveLift
+    DeriveTraversable
+    DerivingStrategies
+    DerivingVia
+    EmptyCase
+    EmptyDataDecls
+    EmptyDataDeriving
+    ExistentialQuantification
+    ExplicitForAll
+    FlexibleContexts
+    FlexibleInstances
+    GADTSyntax
+    GeneralisedNewtypeDeriving
+    ImportQualifiedPost
+    KindSignatures
+    LambdaCase
+    MultiParamTypeClasses
+    MultiWayIf
+    NoStarIsType
+    NumericUnderscores
+    OverloadedStrings
+    PolyKinds
+    PostfixOperators
+    RankNTypes
+    ScopedTypeVariables
+    StandaloneDeriving
+    StandaloneKindSignatures
+    TupleSections
+    TypeApplications
+    TypeFamilies
+    TypeOperators
+    ViewPatterns
+
+  build-depends:
+    , array
+    , attoparsec
+    , base                 >=4 && <5
+    , bytestring
+    , containers
+    , data-interval
+    , fgl
+    , lens
+    , linear
+    , megaparsec
+    , mtl
+    , nonempty-containers
+    , safe
+    , split
+    , text
+    , transformers
+    , vector
+
+  hs-source-dirs:     src
+  default-language:   Haskell2010
+  other-modules:
+    Y2021.Day1
+    Y2022.Day1
+    Y2022.Day10
+    Y2022.Day11
+    Y2022.Day2
+    Y2022.Day3
+    Y2022.Day4
+    Y2022.Day5
+    Y2022.Day6
+    Y2022.Day7
+    Y2022.Day8
+    Y2022.Day9
+    Y2023.Day1
+    Y2023.Day10
+    Y2023.Day11
+    Y2023.Day2
+    Y2023.Day3
+    Y2023.Day4
+    Y2023.Day5
+    Y2023.Day6
+    Y2023.Day7
+    Y2023.Day8
+    Y2023.Day9
+    Y2024.Day1
+    Y2024.Day10
+    Y2024.Day11
+    Y2024.Day12
+    Y2024.Day13
+    Y2024.Day14
+    Y2024.Day15
+    Y2024.Day16
+    Y2024.Day17
+    Y2024.Day18
+    Y2024.Day19
+    Y2024.Day2
+    Y2024.Day20
+    Y2024.Day21
+    Y2024.Day22
+    Y2024.Day23
+    Y2024.Day24
+    Y2024.Day25
+    Y2024.Day3
+    Y2024.Day4
+    Y2024.Day5
+    Y2024.Day6
+    Y2024.Day7
+    Y2024.Day8
+    Y2024.Day9
+
+--     Y2021.Day10
+--     Y2021.Day11
+--     Y2021.Day12
+-- Y2021.Day2
+-- Y2021.Day3
+-- Y2021.Day4
+-- Y2021.Day5
+-- Y2021.Day6
+-- Y2021.Day7
+-- Y2021.Day8
+-- Y2021.Day9
+
+common test-deps
+  build-depends: hspec
+
+library
+  import:         shared
+  hs-source-dirs: src
+
+executable aoc-executable
+  import:      shared
+  main-is:     Main.hs
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+
+-- test-suite aoc-test
+--   type:           exitcode-stdio-1.0
+--   import:         shared, test-deps
+--   main-is:        Spec.hs
+--   other-modules:
+--     Y2021.Day11Spec
+--     Y2021.Day8Spec
+
+--   hs-source-dirs: test
+
+-- ghc-options:        -threaded -rtsopts -with-rtsopts=-N
+-- build-depends:
+--   , aoc
+--   , array
+--   , attoparsec
+--   , base        >=4 && <5
+--   , bytestring
+--   , containers
+--   , hspec
+--   , mtl
+--   , QuickCheck
+--   , split
+--   , text
+--   , vector
+
+-- default-language:   Haskell2010
+-- build-tool-depends: hspec-discover:hspec-discover
