@@ -129,3 +129,209 @@ Vyrdax  Drakzyph  Fyrryn  Elarzris
 
 #+RESULTS:
 | Dalkryth,Fengnaris,Urnor,Zarathzal,Aelithfal,Karthris,Yndnylor,Tharnrilor,Adalsarix,Nyralis | L6,R1,L9,R7,L1,R7,L1,R2,L9,R7,L9 |
+
+
+** COMMENT how to read file and split by line and assign first and second element to varaible in emacs lisp
+
+⏺ Here are several ways to read a file, split by lines, and extract first/second elements in Emacs Lisp:
+
+  Using let with car and cadr
+
+  (let* ((lines (with-temp-buffer
+                  (insert-file-contents "path/to/file.txt")
+                  (split-string (buffer-string) "\n" t)))
+         (first-line (car lines))
+         (second-line (cadr lines)))
+    ;; Use first-line and second-line here
+    (message "First: %s, Second: %s" first-line second-line))
+
+  Using nth
+
+  (let* ((lines (with-temp-buffer
+                  (insert-file-contents "path/to/file.txt")
+                  (split-string (buffer-string) "\n" t)))
+         (first-line (nth 0 lines))
+         (second-line (nth 1 lines)))
+    (message "First: %s, Second: %s" first-line second-line))
+
+  Destructuring with pcase-let (modern Emacs)
+
+  (pcase-let ((`(,first ,second . ,_rest)
+               (with-temp-buffer
+                 (insert-file-contents "path/to/file.txt")
+                 (split-string (buffer-string) "\n" t))))
+    (message "First: %s, Second: %s" first second))
+
+  Using seq-let (Emacs 25+)
+
+  (seq-let [first second]
+      (with-temp-buffer
+        (insert-file-contents "path/to/file.txt")
+        (split-string (buffer-string) "\n" t))
+    (message "First: %s, Second: %s" first second))
+
+  Splitting each line into words
+
+  If you want to split each line by spaces and get first/second words:
+
+  (let* ((lines (with-temp-buffer
+                  (insert-file-contents "path/to/file.txt")
+                  (split-string (buffer-string) "\n" t)))
+         (first-line (car lines))
+         (words (split-string first-line))
+         (first-word (car words))
+         (second-word (cadr words)))
+    (message "First word: %s, Second word: %s" first-word second-word))
+
+  Processing all lines with first/second columns
+
+  (defun process-file (filename)
+    (let ((lines (with-temp-buffer
+                   (insert-file-contents filename)
+                   (split-string (buffer-string) "\n" t))))
+      (dolist (line lines)
+        (let* ((parts (split-string line))
+               (first (car parts))
+               (second (cadr parts)))
+          (message "Line: %s | %s" first second)))))
+
+  (process-file "data/2024/day1.txt")
+
+  Complete Advent of Code example
+
+  (defun solve-day1 (filename)
+    (let* ((lines (with-temp-buffer
+                    (insert-file-contents filename)
+                    (split-string (buffer-string) "\n" t)))
+           (first-line (car lines))
+           (second-line (cadr lines)))
+      ;; Process first and second lines
+      (list first-line second-line)))
+
+  (solve-day1 "data/2024/day1.txt")
+
+  Key functions
+
+  - car - first element (head)
+  - cadr - second element (equivalent to (car (cdr list)))
+  - caddr - third element
+  - nth n list - nth element (0-indexed)
+  - split-string - split string by delimiter
+
+  The let* form is useful when later bindings depend on earlier ones.
+
+#+begin_src elisp
+ (let* ((lines (with-temp-buffer
+                  (insert-file-contents "../../data/2025/quest1.txt")
+                  (split-string (buffer-string) "\n" t)))
+         (first-line (car lines))
+         (second-line (cadr lines)))
+    ;; Use first-line and second-line here
+    (message "First: %s, Second: %s" first-line second-line))  
+#+end_src
+
+#+RESULTS:
+: First: Dalkryth,Fengnaris,Urnor,Zarathzal,Aelithfal,Karthris,Yndnylor,Tharnrilor,Adalsarix,Nyralis, Second: L6,R1,L9,R7,L1,R7,L1,R2,L9,R7,L9
+
+#+begin_src elisp
+ (seq-let [first second names moves]
+      (with-temp-buffer
+        (insert-file-contents  "../../data/2025/quest1.txt")
+        (split-string (buffer-string) "\n" t))
+    (message "First: %s, Second: %s" first second))
+  
+#+end_src
+
+#+RESULTS:
+: First: Dalkryth,Fengnaris,Urnor,Zarathzal,Aelithfal,Karthris,Yndnylor,Tharnrilor,Adalsarix,Nyralis, Second: L6,R1,L9,R7,L1,R7,L1,R2,L9,R7,L9
+
+#+begin_src elisp
+(if (> 5 11) () (- 5 11))  
+#+end_src
+
+#+RESULTS:
+: -6
+
+#+begin_src elisp
+(min 3 6)  
+#+end_src
+
+#+RESULTS:
+: 3
+
+#+begin_src elisp
+
+    
+
+      (defun process-directions (directions length')
+        "Process lis
+  t of direction strings. L subtracts, R adds."
+      (seq-reduce
+       (lambda (acc dir)
+         (let* ((direction (substring dir 0 1))
+                (number (string-to-number (substring dir 1))))
+           (if (string= direction "L")
+               (if (> acc number) (- acc number) (0))
+             (min (+ acc number) length'))))
+       directions
+       0))
+
+    (let* ((lines (with-temp-buffer
+                    (insert-file-contents "../../data/2025/quest1.txt")
+                    (split-string (buffer-string) "\n" t)))
+           (first-line (car lines))
+           (second-line (cadr lines))
+           (first-parts (split-string first-line ","))
+           (second-parts (split-string second-line ","))
+           (names-len (length first-parts))
+    	 )
+      ;; Use first-parts and second-parts here
+     ;; (message "First line parts: %S" first-parts)
+      (message "Second line parts: %S" (nth (mod (process-directions second-parts (- names-len 1)) names-len) first-parts)
+      ))  
+#+end_src
+
+#+RESULTS:
+: Second line parts: "Nyralis"
+
+#+begin_src python  :results output
+def to_delta(s):
+    d = s[0]
+    n = int(s[1:])
+    return -n if d == "L" else n
+
+
+def load_file(part):
+    with open(f"../../data/2025/quest1.txt") as f:
+        lines = f.read().splitlines()
+    name_str, _, dir_str = lines
+    names = name_str.split(",")
+    dirs = dir_str.split(",")
+    return names, list(map(to_delta,dirs))
+
+
+names, dirs = load_file(1)
+i = 0
+for delta in dirs:
+    i += delta
+    if i < 0:
+        i = 0
+    if i >= len(names):
+        i = len(names) - 1
+print(names[i])
+
+names, dirs = load_file(2)
+i = sum(dirs) % len(names)
+print(names[i])
+
+names, dirs = load_file(3)
+for delta in dirs:
+    delta %= len(names)
+    names[0], names[delta] = names[delta], names[0]
+print(names[0])
+#+end_src
+
+#+RESULTS:
+: Dalkryth
+: Nyralis
+: Urnor
