@@ -26,8 +26,11 @@
 
       fclose(file);
       return 0;
-  }
+      }
 
+      
+      clang -Wall -lm -o quest1 c/quest1.c
+      
   Store lines in an array
 
   #include <stdio.h>
