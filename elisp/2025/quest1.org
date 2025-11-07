@@ -320,10 +320,39 @@ Vyrdax  Drakzyph  Fyrryn  Elarzris
       ;;(message "First line parts: %S" first-parts)
      (message "Second line parts: %S" (nth (mod (process-directions second-parts (- names-len 1)) names-len) first-parts)
       ))  
+      #+end_src
+
+
+#+begin_src elisp
+  (defun process-directions (directions max-length)
+    "Process list of direction strings. L subtracts, R adds."
+    (seq-reduce
+     (lambda (acc dir)
+       (let* ((direction (substring dir 0 1))
+              (number (string-to-number (substring dir 1))))
+         (if (string= direction "L")
+              (- acc number)
+           (+ acc number) )))
+     directions
+     0))  
+    (let* ((lines (with-temp-buffer
+                    (insert-file-contents "../../data/2025/quest2.txt")
+                    (split-string (buffer-string) "\n" t)))
+           (first-line (car lines))
+           (second-line (cadr lines))
+           (first-parts (split-string first-line ","))
+           (second-parts (split-string second-line ","))
+           (names-len (length first-parts))
+    	 )
+      ;; Use first-parts and second-parts here
+      ;;(message "First line parts: %S" first-parts)
+     (message "Second line parts: %S" (nth (mod (process-directions second-parts (- names-len 1)) names-len) first-parts)
+      ))  
 #+end_src
 
+
 #+RESULTS:
-: Second line parts: "Dalkryth"
+: Second line parts: "Mornfeth"
 
 #+begin_src python  :results output
 def to_delta(s):
@@ -333,7 +362,7 @@ def to_delta(s):
 
 
 def load_file(part):
-    with open(f"../../data/2025/quest1.txt") as f:
+    with open(f"../../data/2025/quest2.txt") as f:
         lines = f.read().splitlines()
     name_str, _, dir_str = lines
     names = name_str.split(",")
@@ -363,6 +392,194 @@ print(names[0])
 #+end_src
 
 #+RESULTS:
-: Dalkryth
-: Nyralis
-: Urnor
+: Oronelor
+: Mornfeth
+: Auremirath
+
+
+* How to swap two elements in list by index in emacs lisp
+
+⏺ Here are several ways to swap two elements in a list by index in Emacs Lisp:
+
+  Functional approach (creating new list)
+
+  #+begin_src elisp
+
+  (defun swap-elements (lst i j)
+    "Return new list with elements at indices I and J swapped."
+    (let ((elem-i (nth i lst))
+          (elem-j (nth j lst)))
+      (mapcar (lambda (idx)
+                (cond
+                 ((= idx i) elem-j)
+                 ((= idx j) elem-i)
+                 (t (nth idx lst))))
+              (number-sequence 0 (1- (length lst))))))
+
+  ;; Test
+  (swap-elements '(a b c d e) 1 3)
+  ;; => (a d c b e)
+  #+end_src
+
+#+RESULTS:
+| a | d | c | b | e |
+
+  More efficient functional approach
+
+  (defun swap-elements (lst i j)
+    "Return new list with elements at indices I and J swapped."
+    (when (> i j)
+      (let ((temp i))
+        (setq i j)
+        (setq j temp)))
+    (let ((elem-i (nth i lst))
+          (elem-j (nth j lst))
+          (result '())
+          (idx 0))
+      (dolist (elem lst (nreverse result))
+        (cond
+         ((= idx i) (push elem-j result))
+         ((= idx j) (push elem-i result))
+         (t (push elem result)))
+        (setq idx (1+ idx)))))
+
+  ;; Test
+  (swap-elements '(a b c d e) 1 3)
+  ;; => (a d c b e)
+
+  Destructive approach (modifies original list)
+
+  (defun swap-elements! (lst i j)
+    "Destructively swap elements at indices I and J in LST."
+    (let ((pos-i (nthcdr i lst))
+          (pos-j (nthcdr j lst)))
+      (when (and pos-i pos-j)
+        (let ((temp (car pos-i)))
+          (setcar pos-i (car pos-j))
+          (setcar pos-j temp))))
+    lst)
+
+  ;; Test
+  (let ((my-list '(a b c d e)))
+    (swap-elements! my-list 1 3)
+    my-list)
+  ;; => (a d c b e)
+
+  Using seq library (modern approach)
+
+  (defun swap-elements (lst i j)
+    "Return new list with elements at indices I and J swapped."
+    (let* ((vec (vconcat lst))  ; Convert to vector for O(1) access
+           (temp (aref vec i)))
+      (aset vec i (aref vec j))
+      (aset vec j temp)
+      (append vec nil)))  ; Convert back to list
+
+  ;; Test
+  (swap-elements '(a b c d e) 1 3)
+  ;; => (a d c b e)
+
+  Clean and simple version
+
+  (defun swap-elements (lst i j)
+    "Return new list with elements at I and J swapped."
+    (let ((elem-i (nth i lst))
+          (elem-j (nth j lst))
+          (idx 0)
+          (result '()))
+      (dolist (elem lst (nreverse result))
+        (push (cond ((= idx i) elem-j)
+                    ((= idx j) elem-i)
+                    (t elem))
+              result)
+        (setq idx (1+ idx)))))
+
+  ;; Test
+  (swap-elements '(a b c d e) 1 3)
+  ;; => (a d c b e)
+
+  (swap-elements '(10 20 30 40 50) 0 4)
+  ;; => (50 20 30 40 10)
+
+  Practical example with numbers
+
+  (defun swap-elements (lst i j)
+    "Return new list with elements at I and J swapped."
+    (let ((elem-i (nth i lst))
+          (elem-j (nth j lst))
+          (idx 0)
+          (result '()))
+      (dolist (elem lst (nreverse result))
+        (push (cond ((= idx i) elem-j)
+                    ((= idx j) elem-i)
+                    (t elem))
+              result)
+        (setq idx (1+ idx)))))
+
+  ;; Examples
+  (swap-elements '(1 2 3 4 5) 0 4)
+  ;; => (5 2 3 4 1)
+
+  (swap-elements '("L6" "R1" "L9" "R7") 1 2)
+  ;; => ("L6" "L9" "R1" "R7")
+
+  Key differences:
+
+  | Approach        | Modifies original? | Performance | Notes                                |
+  |-----------------|--------------------|-------------|--------------------------------------|
+  | Functional      | No                 | O(n)        | Safe, returns new list               |
+  | Destructive (!) | Yes                | O(n)        | Faster, but modifies input           |
+  | Vector-based    | No                 | O(n)        | Fast access, good for multiple swaps |
+
+  Which to use?
+
+  - Functional approach: When you want to keep the original list unchanged (most common in Lisp)
+  - Destructive approach: When performance matters and you don't need the original list
+  - Vector-based: When doing multiple index operations
+
+  For most use cases, I recommend the clean and simple version above - it's functional, readable,
+  and efficient enough for typical list sizes.
+
+* Part III
+
+#+begin_src elisp
+  (defun process-directions (directions max-length)
+    "Process list of direction strings. L subtracts, R adds."
+    (seq-reduce
+     (lambda (acc dir)
+       (let* ((direction (substring dir 0 1))
+              (number (string-to-number (substring dir 1))))
+         (if (string= direction "L")
+              (- acc number)
+           (+ acc number) )))
+     directions
+     0))
+
+  
+  (defun swap-elements (lst i j)
+    "Return new list with elements at indices I and J swapped."
+    (let ((elem-i (nth i lst))
+          (elem-j (nth j lst)))
+      (mapcar (lambda (idx)
+                (cond
+                 ((= idx i) elem-j)
+                 ((= idx j) elem-i)
+                 (t (nth idx lst))))
+              (number-sequence 0 (1- (length lst))))))
+
+
+    (let* ((lines (with-temp-buffer
+                    (insert-file-contents "../../data/2025/quest2.txt")
+                    (split-string (buffer-string) "\n" t)))
+           (first-line (car lines))
+           (second-line (cadr lines))
+           (first-parts (split-string first-line ","))
+           (second-parts (split-string second-line ","))
+           (names-len (length first-parts))
+    	 )
+      ;; Use first-parts and second-parts here
+      ;;(message "First line parts: %S" first-parts)
+     (message "Second line parts: %S" (nth (mod (process-directions second-parts (- names-len 1)) names-len) first-parts)
+      ))  
+#+end_src
+
