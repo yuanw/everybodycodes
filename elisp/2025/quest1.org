@@ -246,11 +246,11 @@ Vyrdax  Drakzyph  Fyrryn  Elarzris
 : First: Dalkryth,Fengnaris,Urnor,Zarathzal,Aelithfal,Karthris,Yndnylor,Tharnrilor,Adalsarix,Nyralis, Second: L6,R1,L9,R7,L1,R7,L1,R2,L9,R7,L9
 
 #+begin_src elisp
-(if (> 5 11) () (- 5 11))  
+(if (< 5 11) 0 (- 5 11))  
 #+end_src
 
 #+RESULTS:
-: -6
+: 0
 
 #+begin_src elisp
 (min 3 6)  
@@ -260,22 +260,53 @@ Vyrdax  Drakzyph  Fyrryn  Elarzris
 : 3
 
 #+begin_src elisp
+   (defun process-directions (directions length')
+          "Process lis
+    t of direction strings. L subtracts, R adds."
+        (seq-reduce
+         (lambda (acc dir)
+           (let* ((direction (substring dir 0 1))
+                  (number (string-to-number (substring dir 1))))
+             (if (string= direction "L")
+                 (if (> acc number) (- acc number) 0)
+               (min (+ acc number) length')))
+         directions
+         0 )
+        ))  
+#+end_src
 
-    
+#+begin_src elisp
 
-      (defun process-directions (directions length')
-        "Process lis
-  t of direction strings. L subtracts, R adds."
-      (seq-reduce
-       (lambda (acc dir)
-         (let* ((direction (substring dir 0 1))
-                (number (string-to-number (substring dir 1))))
-           (if (string= direction "L")
-               (if (> acc number) (- acc number) (0))
-             (min (+ acc number) length'))))
-       directions
-       0))
+  (defun process-directions (directions max-length)
+    "Process list of direction strings. L subtracts, R adds."
+    (seq-reduce
+     (lambda (acc dir)
+       (let* ((direction (substring dir 0 1))
+              (number (string-to-number (substring dir 1))))
+         (if (string= direction "L")
+             (if (> acc number) (- acc number) 0)
+           (min (+ acc number) max-length))))
+     directions
+     0))  
+#+end_src
 
+#+RESULTS:
+: process-directions
+
+#+begin_src elisp
+
+   
+  (defun process-directions (directions max-length)
+    "Process list of direction strings. L subtracts, R adds."
+    (seq-reduce
+     (lambda (acc dir)
+       (let* ((direction (substring dir 0 1))
+              (number (string-to-number (substring dir 1))))
+         (if (string= direction "L")
+             (if (> acc number) (- acc number) 0)
+           (min (+ acc number) max-length))))
+     directions
+     0))  
     (let* ((lines (with-temp-buffer
                     (insert-file-contents "../../data/2025/quest1.txt")
                     (split-string (buffer-string) "\n" t)))
@@ -286,13 +317,13 @@ Vyrdax  Drakzyph  Fyrryn  Elarzris
            (names-len (length first-parts))
     	 )
       ;; Use first-parts and second-parts here
-     ;; (message "First line parts: %S" first-parts)
-      (message "Second line parts: %S" (nth (mod (process-directions second-parts (- names-len 1)) names-len) first-parts)
+      ;;(message "First line parts: %S" first-parts)
+     (message "Second line parts: %S" (nth (mod (process-directions second-parts (- names-len 1)) names-len) first-parts)
       ))  
 #+end_src
 
 #+RESULTS:
-: Second line parts: "Nyralis"
+: Second line parts: "Dalkryth"
 
 #+begin_src python  :results output
 def to_delta(s):
