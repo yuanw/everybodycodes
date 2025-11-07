@@ -1,0 +1,131 @@
+
+* Part I
+There's something remarkable about the eggshell you hatched from. Faintly glowing dots and lines cover its entire surface. Even stranger is the fact that you understand what they mean! Is it a unique language that all members of your species are born knowing?
+After taking a closer look, it turns out that the eggshell has three separate sections. Each section contains a list of names and a list of instructions specifying how to navigate through the list of names. Before executing the first instruction, you are at the first name of the list. Each instruction begins with the letter
+
+ R 
+
+or
+
+ L 
+
+, followed by a certain number, which simply indicates how many positions to move to the (R)ight or to the (L)eft from your current position.
+You're taking a closer look at the first section ( your notes ). The description says that if you can't follow the full instruction without going off the list, you do as many moves as you can to stay on it. For example, if the next instruction is
+
+ L3 
+
+and you are at the second name of the list, you move only one position to the left. The description additionally states that the name you land on at the end of the entire process represents the name of the dragonduck inside the egg! So, you're a dragonduck, and you'll find out your name soon!
+Example based on the following notes:
+
+Vyrdax,Drakzyph,Fyrryn,Elarzris
+
+R3,L2,R3,L1
+
+Start at the first name on the list: Vyrdax:
+
+  ↓
+Vyrdax  Drakzyph  Fyrryn  Elarzris
+
+The first instruction is
+
+ R3 
+
+, so you move three positions to the right, landing on Elarzris:
+
+                             ↓
+Vyrdax  Drakzyph  Fyrryn  Elarzris
+
+The next instruction is
+
+ L2 
+
+, so you move two positions to the left, landing on Drakzyph:
+
+           ↓
+Vyrdax  Drakzyph  Fyrryn  Elarzris
+
+The next instruction is
+
+ R3 
+
+, but the list is too short for that move. Instead, you move as far as possible - to Elarzris:
+
+                             ↓
+Vyrdax  Drakzyph  Fyrryn  Elarzris
+
+The final instruction is
+
+ L1 
+
+, moving one position left to
+
+ Fyrryn 
+
+. This is where the process ends:
+
+                    ↓
+Vyrdax  Drakzyph  Fyrryn  Elarzris
+
+
+> how to read content from file and split by newline in emacs
+
+⏺ Here are the common ways to read a file and split by newlines in Emacs Lisp:
+
+  Simple: Read entire file and split
+
+  ;; Read file into a list of lines
+  (with-temp-buffer
+    (insert-file-contents "path/to/file.txt")
+    (split-string (buffer-string) "\n" t))
+
+  The third argument t to split-string omits empty strings (trailing newlines).
+
+  Alternative: Using f.el library (if available)
+
+  ;; Requires f.el library
+  (f-read-lines "path/to/file.txt")
+
+  Manual line-by-line reading
+
+  ;; Read lines into a list manually
+  (with-temp-buffer
+    (insert-file-contents "path/to/file.txt")
+    (let ((lines '()))
+      (goto-char (point-min))
+      (while (not (eobp))
+        (push (buffer-substring-no-properties
+               (line-beginning-position)
+               (line-end-position))
+              lines)
+        (forward-line 1))
+      (nreverse lines)))
+
+  Read entire file as string (no splitting)
+
+  ;; Just get the file contents as a string
+  (with-temp-buffer
+    (insert-file-contents "path/to/file.txt")
+    (buffer-string))
+
+  Common pattern for Advent of Code style problems
+
+  (defun read-input (filename)
+    "Read FILENAME and return list of lines."
+    (with-temp-buffer
+      (insert-file-contents filename)
+      (split-string (buffer-string) "\n" t)))
+
+  ;; Usage
+  (let ((lines (read-input "data/2024/day1.txt")))
+    (mapcar #'string-to-number lines))
+
+  The with-temp-buffer + insert-file-contents + split-string pattern is the most common and idiomatic approach in Emacs Lisp.
+  
+		    #+begin_src elisp
+  (with-temp-buffer
+    (insert-file-contents "../../data/2025/quest1.txt")
+    (split-string (buffer-string) "\n" t))		      
+#+end_src
+
+#+RESULTS:
+| Dalkryth,Fengnaris,Urnor,Zarathzal,Aelithfal,Karthris,Yndnylor,Tharnrilor,Adalsarix,Nyralis | L6,R1,L9,R7,L1,R7,L1,R2,L9,R7,L9 |

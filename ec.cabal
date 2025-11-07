@@ -1,8 +1,8 @@
 cabal-version: 2.4
-name:          aoc
+name:          ec
 version:       0.0.0.1
 license:       MIT
-copyright:     2022 Yuan Wang
+copyright:     2025 Yuan Wang
 maintainer:    me@yuanwang.ca
 author:        Yuan Wang
 build-type:    Simple
@@ -11,7 +11,7 @@ data-files:
   data/2022/*.txt
   data/2023/*.txt
   data/2024/*.txt
-
+  data/2025/*.txt
 -- extra-source-files:
 --   LICENSE
 --   README.md
