@@ -1,0 +1,272 @@
+⏺ Here are several ways to read a file and split by lines in C:
+
+  Simple approach with fgets
+
+  #include <stdio.h>
+  #include <string.h>
+
+  #define MAX_LINE_LENGTH 1024
+
+  int main() {
+      FILE *file = fopen("input.txt", "r");
+      if (file == NULL) {
+          perror("Error opening file");
+          return 1;
+      }
+
+      char line[MAX_LINE_LENGTH];
+
+      // Read line by line
+      while (fgets(line, sizeof(line), file) != NULL) {
+          // Remove newline character
+          line[strcspn(line, "\n")] = '\0';
+
+          printf("Line: %s\n", line);
+      }
+
+      fclose(file);
+      return 0;
+  }
+
+  Store lines in an array
+
+  #include <stdio.h>
+  #include <stdlib.h>
+  #include <string.h>
+
+  #define MAX_LINE_LENGTH 1024
+  #define MAX_LINES 1000
+
+  int main() {
+      FILE *file = fopen("input.txt", "r");
+      if (file == NULL) {
+          perror("Error opening file");
+          return 1;
+      }
+
+      char *lines[MAX_LINES];
+      int line_count = 0;
+      char buffer[MAX_LINE_LENGTH];
+
+      // Read all lines
+      while (fgets(buffer, sizeof(buffer), file) != NULL && line_count < MAX_LINES) {
+          // Remove newline
+          buffer[strcspn(buffer, "\n")] = '\0';
+
+          // Allocate memory and copy
+          lines[line_count] = malloc(strlen(buffer) + 1);
+          strcpy(lines[line_count], buffer);
+          line_count++;
+      }
+
+      fclose(file);
+
+      // Use the lines
+      for (int i = 0; i < line_count; i++) {
+          printf("Line %d: %s\n", i, lines[i]);
+      }
+
+      // Free memory
+      for (int i = 0; i < line_count; i++) {
+          free(lines[i]);
+      }
+
+      return 0;
+  }
+
+  Dynamic array with realloc
+
+  #include <stdio.h>
+  #include <stdlib.h>
+  #include <string.h>
+
+  #define MAX_LINE_LENGTH 1024
+
+  char **read_lines(const char *filename, int *line_count) {
+      FILE *file = fopen(filename, "r");
+      if (file == NULL) {
+          perror("Error opening file");
+          return NULL;
+      }
+
+      char **lines = NULL;
+      char buffer[MAX_LINE_LENGTH];
+      *line_count = 0;
+
+      while (fgets(buffer, sizeof(buffer), file) != NULL) {
+          // Remove newline
+          buffer[strcspn(buffer, "\n")] = '\0';
+
+          // Resize array
+          lines = realloc(lines, (*line_count + 1) * sizeof(char *));
+
+          // Allocate and copy line
+          lines[*line_count] = malloc(strlen(buffer) + 1);
+          strcpy(lines[*line_count], buffer);
+
+          (*line_count)++;
+      }
+
+      fclose(file);
+      return lines;
+  }
+
+  void free_lines(char **lines, int line_count) {
+      for (int i = 0; i < line_count; i++) {
+          free(lines[i]);
+      }
+      free(lines);
+  }
+
+  int main() {
+      int line_count;
+      char **lines = read_lines("input.txt", &line_count);
+
+      if (lines == NULL) {
+          return 1;
+      }
+
+      // Use the lines
+      for (int i = 0; i < line_count; i++) {
+          printf("Line %d: %s\n", i, lines[i]);
+      }
+
+      // Clean up
+      free_lines(lines, line_count);
+      return 0;
+  }
+
+  Using getline (POSIX, more robust)
+
+  #include <stdio.h>
+  #include <stdlib.h>
+
+  int main() {
+      FILE *file = fopen("input.txt", "r");
+      if (file == NULL) {
+          perror("Error opening file");
+          return 1;
+      }
+
+      char *line = NULL;
+      size_t len = 0;
+      ssize_t read;
+
+      // getline automatically allocates memory
+      while ((read = getline(&line, &len, file)) != -1) {
+          // Remove newline
+          if (line[read - 1] == '\n') {
+              line[read - 1] = '\0';
+          }
+
+          printf("Line: %s\n", line);
+      }
+
+      free(line);
+      fclose(file);
+      return 0;
+  }
+
+  Reading entire file into memory first
+
+  #include <stdio.h>
+  #include <stdlib.h>
+  #include <string.h>
+
+  char *read_file(const char *filename) {
+      FILE *file = fopen(filename, "rb");
+      if (file == NULL) {
+          return NULL;
+      }
+
+      // Get file size
+      fseek(file, 0, SEEK_END);
+      long size = ftell(file);
+      fseek(file, 0, SEEK_SET);
+
+      // Allocate buffer
+      char *buffer = malloc(size + 1);
+      fread(buffer, 1, size, file);
+      buffer[size] = '\0';
+
+      fclose(file);
+      return buffer;
+  }
+
+  int main() {
+      char *content = read_file("input.txt");
+      if (content == NULL) {
+          perror("Error reading file");
+          return 1;
+      }
+
+      // Split by newlines
+      char *line = strtok(content, "\n");
+      while (line != NULL) {
+          printf("Line: %s\n", line);
+          line = strtok(NULL, "\n");
+      }
+
+      free(content);
+      return 0;
+  }
+
+  Processing directions (like your Elisp example)
+
+  #include <stdio.h>
+  #include <stdlib.h>
+  #include <string.h>
+
+  int process_direction(const char *dir, int acc) {
+      char direction = dir[0];
+      int number = atoi(dir + 1);
+
+      if (direction == 'L') {
+          return acc - number;
+      } else if (direction == 'R') {
+          return acc + number;
+      }
+      return acc;
+  }
+
+  int main() {
+      FILE *file = fopen("input.txt", "r");
+      if (file == NULL) {
+          perror("Error opening file");
+          return 1;
+      }
+
+      char line[256];
+      int result = 0;
+
+      while (fgets(line, sizeof(line), file) != NULL) {
+          line[strcspn(line, "\n")] = '\0';  // Remove newline
+          result = process_direction(line, result);
+      }
+
+      printf("Result: %d\n", result);
+
+      fclose(file);
+      return 0;
+  }
+
+  Key C functions:
+
+  - fopen() - open file
+  - fgets() - read line (safe, limited by buffer size)
+  - getline() - read line (allocates memory automatically, POSIX only)
+  - fclose() - close file
+  - strcspn() - find newline character position
+  - strtok() - tokenize string
+  - atoi() - convert string to integer
+
+  Summary:
+
+  - fgets - most portable, simple, requires fixed buffer
+  - getline - POSIX, handles long lines automatically
+  - Store in array - when you need to access lines multiple times
+  - strtok - when you want to split entire file at once
+
+  For Advent of Code style problems, the simple fgets approach is usually sufficient!
+
+────────────────────────
