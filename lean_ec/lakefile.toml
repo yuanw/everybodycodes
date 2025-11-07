@@ -1,0 +1,7 @@
+name = "lean_ec"
+version = "0.1.0"
+defaultTargets = ["lean_ec"]
+
+[[lean_exe]]
+name = "lean_ec"
+root = "Main"
