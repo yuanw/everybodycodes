@@ -2,3 +2,13 @@
 
 
 https://everybody.codes/events
+
+
+
+* Haskell
+
+* Lisp (emacs or common lisp)
+
+* Lean (?)
+
+* C (zig or ante)
