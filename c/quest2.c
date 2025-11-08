@@ -12,6 +12,9 @@ typedef struct {
     int y;
 } Complex;
 
+Complex add(Complex a, Complex b) {
+  return Complex(a.x + b.x, a.y + b.y);
+}
 
 int main() {
     FILE *file = fopen("data/2025/quest1-part3.txt", "r");
