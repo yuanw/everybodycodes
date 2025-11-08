@@ -365,7 +365,7 @@ def to_delta(s):
 
 
 def load_file(part):
-    with open(f"../../data/2025/quest2.txt") as f:
+    with open(f"../../data/2025/quest1-part3.txt") as f:
         lines = f.read().splitlines()
     name_str, _, dir_str = lines
     names = name_str.split(",")
@@ -395,9 +395,9 @@ print(names[0])
 #+end_src
 
 #+RESULTS:
-: Oronelor
-: Mornfeth
-: Auremirath
+: Havthyris
+: Drelzorin
+: Myndcion
 
 
 * How to swap two elements in list by index in emacs lisp

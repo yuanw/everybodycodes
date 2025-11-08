@@ -50,20 +50,22 @@ int processInstructions2(Instruction* instructions, int instruction_count, int n
     return accumulator % names_length;
 }
 
-char* processInstructions3(Instruction* instructions, int instruction_count, int names_length, char names[][MAX_LINE_LENGTH]) {
+char* processInstructions3(Instruction* instructions, int instruction_count, int names_length, char names[MAX_STRINGS][MAX_LINE_LENGTH]) {
     for (int i = 0; i < instruction_count; i++) {
-        int swap_index;
+        int swap_index = 0;
         if (instructions[i].direction == R) {
             swap_index = instructions[i].steps % names_length;
         } else if (instructions[i].direction == L) {
-            swap_index = (names_length - instructions[i].steps) % names_length;
+	  swap_index = names_length - (instructions[i].steps % names_length);
         }
         
         // Swap element at index 0 with element at swap_index
         char temp[MAX_LINE_LENGTH];
+	printf("\n %s %d Swap %d: %s with %s\n", (instructions[i].direction == L) ? "L": "R", instructions[i].steps, swap_index, names[0], names[swap_index]);
         strcpy(temp, names[0]);
         strcpy(names[0], names[swap_index]);
         strcpy(names[swap_index], temp);
+	printf("\nSelected name: %s\n", names[0]);	
     }
     
     return names[0];
@@ -71,7 +73,7 @@ char* processInstructions3(Instruction* instructions, int instruction_count, int
 
 
 int main() {
-    FILE *file = fopen("data/2025/quest2.txt", "r");
+    FILE *file = fopen("data/2025/quest1-part3.txt", "r");
     if (file == NULL) {
         perror("Error opening file");
         return 1;
@@ -115,16 +117,16 @@ int main() {
     }
 
     // Print parsed data
-    printf("Strings (%d):\n", string_count);
-    for (int i = 0; i < string_count; i++) {
-        printf("  %d: %s\n", i, strings[i]);
-    }
+    /* printf("Strings (%d):\n", string_count); */
+    /* for (int i = 0; i < string_count; i++) { */
+    /*     printf("  %d: %s\n", i, strings[i]); */
+    /* } */
 
     printf("\nInstructions (%d):\n", instruction_count);
     for (int i = 0; i < instruction_count; i++) {
-        printf("  %d: %c%d\n", i, 
-               (instructions[i].direction == L) ? 'L' : 'R', 
-               instructions[i].steps);
+        /* printf("  %d: %c%d\n", i,  */
+        /*        (instructions[i].direction == L) ? 'L' : 'R',  */
+        /*        instructions[i].steps); */
     }
 
     char* result_name = processInstructions3(instructions, instruction_count, string_count, strings);
