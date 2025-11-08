@@ -1,0 +1,3 @@
+Quarnzar,Tirzorin,Zynadarin,Ulkvynar,Havjoris,Vornoth,Tharilsarix,Qyradrith,Krythxelor,Nyssketh
+
+L8,R4,L4,R9,L2,R7,L1,R6,L8,R4,L5

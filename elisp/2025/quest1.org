@@ -308,7 +308,7 @@ Vyrdax  Drakzyph  Fyrryn  Elarzris
      directions
      0))  
     (let* ((lines (with-temp-buffer
-                    (insert-file-contents "../../data/2025/quest1.txt")
+                    (insert-file-contents "../../data/2025/quest1-part1.txt")
                     (split-string (buffer-string) "\n" t)))
            (first-line (car lines))
            (second-line (cadr lines))
@@ -323,7 +323,7 @@ Vyrdax  Drakzyph  Fyrryn  Elarzris
       #+end_src
 
 #+RESULTS:
-: Second line parts: "Dalkryth"
+: Second line parts: "Quarnzar"
 
 
 #+begin_src elisp
@@ -339,7 +339,7 @@ Vyrdax  Drakzyph  Fyrryn  Elarzris
      directions
      0))  
     (let* ((lines (with-temp-buffer
-                    (insert-file-contents "../../data/2025/quest2.txt")
+                    (insert-file-contents "../../data/2025/quest1-part2.txt")
                     (split-string (buffer-string) "\n" t)))
            (first-line (car lines))
            (second-line (cadr lines))
@@ -355,7 +355,7 @@ Vyrdax  Drakzyph  Fyrryn  Elarzris
 
 
 #+RESULTS:
-: Second line parts: "Mornfeth"
+: Second line parts: "Zyrixeldrin"
 
 #+begin_src python  :results output
 def to_delta(s):

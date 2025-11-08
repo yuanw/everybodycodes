@@ -50,6 +50,26 @@ int processInstructions2(Instruction* instructions, int instruction_count, int n
     return accumulator % names_length;
 }
 
+char* processInstructions3(Instruction* instructions, int instruction_count, int names_length, char names[][MAX_LINE_LENGTH]) {
+    for (int i = 0; i < instruction_count; i++) {
+        int swap_index;
+        if (instructions[i].direction == R) {
+            swap_index = instructions[i].steps % names_length;
+        } else if (instructions[i].direction == L) {
+            swap_index = (names_length - instructions[i].steps) % names_length;
+        }
+        
+        // Swap element at index 0 with element at swap_index
+        char temp[MAX_LINE_LENGTH];
+        strcpy(temp, names[0]);
+        strcpy(names[0], names[swap_index]);
+        strcpy(names[swap_index], temp);
+    }
+    
+    return names[0];
+}
+
+
 int main() {
     FILE *file = fopen("data/2025/quest2.txt", "r");
     if (file == NULL) {
@@ -107,11 +127,8 @@ int main() {
                instructions[i].steps);
     }
 
-    int final_position = processInstructions2(instructions, instruction_count, string_count);
-    printf("\nFinal position: %d\n", final_position);
-    if (final_position < string_count) {
-        printf("Selected name: %s\n", strings[final_position]);
-    }
+    char* result_name = processInstructions3(instructions, instruction_count, string_count, strings);
+    printf("\nSelected name: %s\n", result_name);
 
     fclose(file);
     return 0;

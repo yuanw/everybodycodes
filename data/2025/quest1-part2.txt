@@ -1,0 +1,3 @@
+Zyrixeldrin,Tarlfroth,Drelzyth,Xarquin,Nylxar,Aernarel,Drethral,Belsar,Balthxar,Myndris,Eldengarath,Fyndeldrith,Daronar,Nyssdax,Ulmararis,Varinfelix,Sylulth,Xardax,Tarlulrix,Ardengaz
+
+L17,R9,L5,R8,L17,R8,L10,R14,L5,R10,L5,R6,L5,R17,L5,R7,L5,R12,L5,R9,L17,R10,L6,R5,L15,R9,L6,R14,L15
