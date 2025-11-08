@@ -131,7 +131,7 @@ Vyrdax  Drakzyph  Fyrryn  Elarzris
 | Dalkryth,Fengnaris,Urnor,Zarathzal,Aelithfal,Karthris,Yndnylor,Tharnrilor,Adalsarix,Nyralis | L6,R1,L9,R7,L1,R7,L1,R2,L9,R7,L9 |
 
 
-** COMMENT how to read file and split by line and assign first and second element to varaible in emacs lisp
+** How to read file and split by line and assign first and second element to varaible in emacs lisp
 
 ⏺ Here are several ways to read a file, split by lines, and extract first/second elements in Emacs Lisp:
 
@@ -321,6 +321,9 @@ Vyrdax  Drakzyph  Fyrryn  Elarzris
      (message "Second line parts: %S" (nth (mod (process-directions second-parts (- names-len 1)) names-len) first-parts)
       ))  
       #+end_src
+
+#+RESULTS:
+: Second line parts: "Dalkryth"
 
 
 #+begin_src elisp
